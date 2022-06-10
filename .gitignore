@@ -1,0 +1,15 @@
+*~
+*.pyc
+*.egg-info
+*.eggs/
+*.pybuild/
+__pycache__/
+/build
+/dist
+/deb_dist
+/debian/stcgal*
+/debian/files
+/.vscode
+.coverage
+coverage.xml
+htmlcov/
