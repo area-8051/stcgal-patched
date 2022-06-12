@@ -15,12 +15,28 @@ also a pity since it loses a lot of functionalities available in stcgal.
 This is why I decided to patch stcgal with CreativeLau's changes and 
 make it available here, in the hope it could help other STC fans.
 
+For what it's worth, I've successfully (and repeatedly) tested this 
+patched stcgal with the following MCU:
+
+    STC12C5A56S2-35I-PDIP40
+    
+    STC15W408AS-35I-DIP16
+    STC15W4K32S4-30I-PDIP40
+    
+    STC8A8K64D4-45I-LQFP48
+    STC8A8K64S4A12-28I-LQFP48
+    
+    STC8G1K08-38I-TSSOP20
+    STC8G2K64S4-36I-LQFP48
+    
+    STC8H1K08-36I-TSSOP20
+
 References:
 
-https://github.com/grigorig/stcgal/pull/71
-https://github.com/grigorig/stcgal/issues/63
-https://github.com/grigorig/stcgal/issues/67
-https://github.com/IOsetting/stc8prog
+    https://github.com/grigorig/stcgal/pull/71
+    https://github.com/grigorig/stcgal/issues/63
+    https://github.com/grigorig/stcgal/issues/67
+    https://github.com/IOsetting/stc8prog
 
 >>> For Linux users
 ------------------------------------------------------------------------
