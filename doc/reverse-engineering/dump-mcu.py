@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # This curious script dumps all model info from STC-ISP.
 # Data is directly read from the binary.
-# Offsets are for stc-isp-v6.89G.exe, sha256sum a2690c41ecf2f5f481dcc5e11e6a48f2377d89eb5772628b975872603dbc1e79
+# Offsets are for stc-isp-v6.90C.exe
 
-MCU_TABLE_OFFSET = 0x00074d28
+MCU_TABLE_OFFSET = 0x00084f88
 MCU_TABLE_SIZE = 1115
 MCU_RECORD_SIZE = 32
-MCU_NAMES_OFFSET = 0x0009a1fc
-MCU_NAMES_PTR_OFFSET = 0x0049a1fc
+MCU_NAMES_OFFSET = 0x000af79c
+MCU_NAMES_PTR_OFFSET = 0x004af79c
 
 import struct
 import sys
@@ -33,7 +33,7 @@ for i in range(MCU_TABLE_SIZE):
     if name_str.startswith("STC12C54") or name_str.startswith("STC12LE54"):
         ee_size = 12 * 1024
 
-    print("MCUModel(name='%s', magic=0x%02x%02x, total=%d, code=%d, eeprom=%d)," %
+    print("    MCUModel(name='%s', magic=0x%02x%02x, total=%d, code=%d, eeprom=%d)," %
         (name_str, mcu_id >> 8, mcu_id & 0xff, total_size, code_size, ee_size))
 
 inp.close()
