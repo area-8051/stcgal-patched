@@ -1,0 +1,76 @@
+How to read MCU definitions from a new STC-ISP executable
+========================================================================
+
+We want to extract 2 tables from the executable, one with MCU names and 
+the other with their characteristics, let's call them "Name Table" and 
+"Info Table" respectively.
+
+The Info Table appears first in the executable and contains references 
+to the MCU name in the Name Table. Each entry in the Name Table is 16 
+bytes long, 32 for the Info Table. New entries are prepended to the 
+Info Table, and appended to the Name Table. Of course, both have the 
+same number of entries.
+
+This means that the Name Table is very easy to locate, as well as the 
+end of the Info Table, but not its beginning, which must be calculated.
+
+Finally, the field of an Info Table entry that references the MCU name 
+is expressed as a memory address, not a file position, so we'll need to 
+determine the base memory address of the name table.
+
+1. Dump the content of the executable in a text file.
+
+hexdump -C stc-isp-v6.89G.exe > stc-isp-v6.89G.txt
+
+2. Locate the first entry of the Name Table.
+
+Search for the following byte sequence:
+53 54 43 39 30 4c 45 35 31 36 41 44 00 00 00 00
+(i.e. nul-terminated "STC90LE516AD" string).
+
+Let's call this file position NTS (Name Table Start).
+
+3. Locate the end of the Name Table.
+
+Search for the following byte sequence:
+55 4e 4b 4e 4f 57 4e 00 25 30 36 58 00 00 00 00
+(i.e. nul-terminated "UNKNOWN" and "%06X" strings).
+
+Let's call this file position NTE (Name Table End).
+
+4. Calculate the number of MCU definitions.
+
+NB_MCU = (NTE - NTS) / 0x10
+
+5. Find the end of the Info Table.
+
+Search for the following byte sequence (fixed last entry):
+05 46 01 00 xx xx xx xx 90 f1 00 00 00 f8 00 00
+00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00
+
+Bytes marked as 'xx' must be ignored while searching
+
+[Note: searching for '90 f1 00 00 00 f8 00 00' is sufficient.]
+
+It should be followed by 32 zeroed bytes. Let's call the file position 
+of the first zeroed byte ITE (Info Table End).
+
+6. Calculate the position of the beginning of the Info Table.
+
+ITS = ITE - 0x20 * NB_MCU
+
+7. Determine the base memory address of the name table.
+
+Let's suppose 'xx xx xx xx' is '9c f7 4a 00'. As it belongs to the Info 
+Table entry describing the first item of the Name Table, we directly 
+have what we're looking for, i.e. 0x004af79c.
+
+NTBA = littleEndianOf32bitUnsignedInt('xx xx xx xx')
+
+8. Update dump-mcu.py with the new values.
+
+MCU_TABLE_OFFSET = <ITS>
+MCU_TABLE_SIZE = <NB_MCU>
+MCU_RECORD_SIZE = 32
+MCU_NAMES_OFFSET = <NTS>
+MCU_NAMES_PTR_OFFSET = <NTBA>
