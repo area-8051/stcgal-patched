@@ -163,6 +163,27 @@ typedef struct {
 	uint32_t unknown2;
 } MCUInfo;
 
+// Bit 1 is 1 for MCU which can accept 5V power supply voltage, be it
+// exclusively or not, and 0 for low-voltage only MCU (around 3.3V).
+#define FLAG_ACCEPT_5V_SUPPLY_VOLTAGE 0x00000002
+
+// Bit 3 is 1 for so-called "IAP" MCU, meaning the start address of the
+// flash portion used for EEPROM emulation can be configured.
+#define FLAG_CONFIGURABLE_EEPROM_SIZE 0x00000008
+
+// Bit 7 is 1 for MCU with an adjustable internal RC oscillator, i.e.
+// that supports calibration. When bits 7 and 8 are both 0, the MCU has
+// no IRCO at all (external crystal only).
+#define FLAG_CONFIGURABLE_IRCO_FREQ 0x00000080
+
+// Bit 8 is 1 for MCU with a fixed-frequency internal RC oscillator
+// (the old IRC* models).
+#define FLAG_FIXED_FREQUENCY_IRCO 0x00000100
+
+// Bit 12 is 1 for MCS-251 MCU, i.e. with a flash size that can be
+// larger than 64KB.
+#define FLAG_IS_MCS251_MCU 0x00001000
+
 #define SEARCH_BUFFER_LEN 8192
 #define MCU_NAME_LEN 16
 
@@ -213,10 +234,21 @@ static void printCSVRow(const MCUInfo *info, const char *name) {
 }
 */
 
+static const char *toBool(uint32_t flags, uint32_t mask) {
+	return (flags & mask) ? "True" : "False";
+}
+
 static void printMCU(const MCUInfo *info, const char *name) {
 	printf(
-		"    MCUModel(name='%s', magic=0x%04x, total=%u, code=%u, eeprom=%u),\n",
-		name, (uint16_t) info->mcuId, info->totalSize, info->flashSize, info->eepromSize
+		"    MCUModel(name='%s', magic=0x%04x, total=%u, code=%u, eeprom=%u, iap=%s, calibrate=%s, mcs251=%s),\n",
+		name, 
+		(uint16_t) info->mcuId, 
+		info->totalSize, 
+		info->flashSize, 
+		info->eepromSize,
+		toBool(info->flags, FLAG_CONFIGURABLE_EEPROM_SIZE),
+		toBool(info->flags, FLAG_CONFIGURABLE_IRCO_FREQ),
+		toBool(info->flags, FLAG_IS_MCS251_MCU)
 	);
 }
 

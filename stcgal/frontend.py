@@ -109,7 +109,7 @@ class StcGal:
 
         if self.opts.option: self.emit_options(self.opts.option)
 
-        if self.protocol.split_code and self.protocol.model.name in MCUModelDatabase.MCU_IAP_List:
+        if self.protocol.split_code and self.protocol.model.iap:
             code_size = self.protocol.split_code
             ee_size = self.protocol.split_eeprom
         else:
