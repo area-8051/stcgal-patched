@@ -21,6 +21,7 @@ patched stcgal with the following MCU:
     STC12C5A56S2-35I-PDIP40
     
     STC15W408AS-35I-DIP16
+    STC15W408AS-35I-SKDIP28
     STC15W4K32S4-30I-PDIP40
     
     STC8A8K64S4A12-28I-LQFP48
@@ -37,6 +38,11 @@ patched stcgal with the following MCU:
     STC8H3K64S4-45I-LQFP32
     STC8H8K64U-45I-PDIP40
 
+    STC32G12K128-Beta-PDIP40
+
+I also tested the STC16F40K128-36I-LQFP64 and found it uses a different
+protocol, so it is NOT supported yet.
+
 While I was at it, I also made a few improvements:
 
 - a new command line option to use either DTR or RTS for automatic
@@ -45,6 +51,15 @@ an automatic programmer)
 
 - an update using the MCU list from stc-isp-v6.89G.exe, which includes 
 nice chips such as the STC16 and STC32
+
+- I replaced dump-mcu.py with a more reverse-engineering beginner-friendly
+dump-mcu.c which handles everything for you. Just provide the path to 
+the executable of STC-ISP as command-line argument and it will spit out
+all the MCUModel definitions on its standard output.
+
+- I found the meaning of a few STC-ISP flags, so I added them to the
+MCUModel collection. One of them indicates if the MCU has a configurable
+EEPROM start address, convenienty replacing the old "IAP" MCU name list.
 
 References:
 
