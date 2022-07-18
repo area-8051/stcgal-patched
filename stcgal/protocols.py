@@ -94,6 +94,7 @@ class StcBaseProtocol(ABC):
         self.protocol_name = None
         self.progress = None
         self.progress_cb = self.progress_bar_cb
+        self.linearBaseAddress = 0
 
     def progress_text_cb(self, current, written, maximum):
         print(current, written, maximum)
@@ -389,7 +390,7 @@ class StcAutoProtocol(StcBaseProtocol):
                              ("stc12", r"(STC|IAP)(10|11|12)\D"),
                              ("stc15a", r"(STC|IAP)15[FL][012]0\d(E|EA|)$"),
                              ("stc15", r"(STC|IAP|IRC)15\D"),
-                             ("stc8d", r"(STC)(8|16|32)"),
+                             ("stc8d", r"(STC)(8|32)"),
                              ("stc8", r"(STC|IAP|IRC)8")]
 
         for protocol_name, pattern in protocol_database:
@@ -1901,8 +1902,23 @@ class Stc8dProtocol(Stc8Protocol):
     def set_option(self, name, value):
         super().set_option(name, value)
         if name=='program_eeprom_split':
-            self.split_code = Utils.to_int(value);
-            self.split_eeprom = self.model.total - Utils.to_int(value);
+            split_point = Utils.to_int(value);
+
+            if self.model.mcs251:
+                """Minimum size is 1K in STC-ISP"""
+                if split_point == 0 and self.model.iap:
+                    split_point = 0x400;
+
+                # CODE starts at 0xFF0000
+                self.split_code = 0x10000;
+                # EEPROM starts at 0xFE0000
+                self.split_eeprom = split_point;
+            else:
+                if split_point == 0 and self.model.iap:
+                    split_point = self.model.code;
+
+                self.split_code = split_point;
+                self.split_eeprom = self.model.total - self.split_code;
 
     def choose_range(self, packet, response, target_count):
         """Choose appropriate trim value mean for next round from challenge

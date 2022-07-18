@@ -44,6 +44,8 @@ class StcGal:
 
     def __init__(self, opts):
         self.opts = opts
+        self.hexFileType = 8
+        self.linearBaseAddress = 0
         self.initialize_protocol(opts)
 
     def initialize_protocol(self, opts):
@@ -94,6 +96,8 @@ class StcGal:
                 fname.endswith(".ihex")):
             try:
                 hexfile = IHex.read(fileobj)
+                self.hexFileType = hexfile.get_mode()
+                self.linearBaseAddress = hexfile.get_linearBaseAddress()
                 binary = hexfile.extract_data()
                 print("%d bytes (Intel HEX)" %len(binary))
                 return binary
@@ -119,37 +123,45 @@ class StcGal:
         print("Loading flash: ", end="")
         sys.stdout.flush()
         bindata = self.load_file_auto(self.opts.code_image)
+        
+        if self.protocol.model.mcs251 and self.hexFileType != 32:
+            print("Invalid input file. MCU is an MCS-251, input file MUST specify a linear", file=sys.stderr)
+            print("base address, i.e. contain a type 04 record. More information at:", file=sys.stderr)
+            print("https://en.wikipedia.org/wiki/Intel_HEX", file=sys.stderr)
+        else:
+            self.protocol.linearBaseAddress = self.linearBaseAddress
 
-        # warn if it overflows
-        if len(bindata) > code_size:
-            print("WARNING: code_image overflows into eeprom segment!", file=sys.stderr)
-        if len(bindata) > (code_size + ee_size):
-            print("WARNING: code_image truncated!", file=sys.stderr)
-            bindata = bindata[0:code_size + ee_size]
+            # warn if it overflows
+            if len(bindata) > code_size:
+                print("WARNING: code_image overflows into eeprom segment!", file=sys.stderr)
+            if len(bindata) > (code_size + ee_size):
+                print("WARNING: code_image truncated!", file=sys.stderr)
+                bindata = bindata[0:code_size + ee_size]
 
-        # add eeprom data if supplied
-        if self.opts.eeprom_image:
-            print("Loading EEPROM: ", end="")
-            sys.stdout.flush()
-            eedata = self.load_file_auto(self.opts.eeprom_image)
-            if len(eedata) > ee_size:
-                print("WARNING: eeprom_image truncated!", file=sys.stderr)
-                eedata = eedata[0:ee_size]
-            if len(bindata) < code_size:
-                bindata += bytes([0xff] * (code_size - len(bindata)))
-            elif len(bindata) > code_size:
-                print("WARNING: eeprom_image overlaps code_image!", file=sys.stderr)
-                bindata = bindata[0:code_size]
-            bindata += eedata
+            # add eeprom data if supplied
+            if self.opts.eeprom_image:
+                print("Loading EEPROM: ", end="")
+                sys.stdout.flush()
+                eedata = self.load_file_auto(self.opts.eeprom_image)
+                if len(eedata) > ee_size:
+                    print("WARNING: eeprom_image truncated!", file=sys.stderr)
+                    eedata = eedata[0:ee_size]
+                if len(bindata) < code_size:
+                    bindata += bytes([0xff] * (code_size - len(bindata)))
+                elif len(bindata) > code_size:
+                    print("WARNING: eeprom_image overlaps code_image!", file=sys.stderr)
+                    bindata = bindata[0:code_size]
+                bindata += eedata
 
-        # pad to 512 byte boundary
-        if len(bindata) % 512:
-            bindata += b'\xff' * (512 - len(bindata) % 512)
+            # pad to 512 byte boundary
+            if len(bindata) % 512:
+                bindata += b'\xff' * (512 - len(bindata) % 512)
 
-        self.protocol.handshake()
-        self.protocol.erase_flash(len(bindata), code_size)
-        self.protocol.program_flash(bindata)
-        self.protocol.program_options()
+            self.protocol.handshake()
+            self.protocol.erase_flash(len(bindata), code_size)
+            self.protocol.program_flash(bindata)
+            self.protocol.program_options()
+        
         self.protocol.disconnect()
 
     def erase_mcu(self):
