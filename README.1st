@@ -61,6 +61,8 @@ all the MCUModel definitions on its standard output.
 MCUModel collection. One of them indicates if the MCU has a configurable
 EEPROM start address, convenienty replacing the old "IAP" MCU name list.
 
+I can be reached at: vincent -DOT- defert -AT- posteo -DOT- net.
+
 References:
 
     https://github.com/grigorig/stcgal/pull/71
