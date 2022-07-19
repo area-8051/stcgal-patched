@@ -63,6 +63,9 @@ EEPROM start address, convenienty replacing the old "IAP" MCU name list.
 
 I can be reached at: vincent -DOT- defert -AT- posteo -DOT- net.
 
+Note: I've rename the original README.md to README.md.stcgal so that 
+github displays up-to-date information when accessing the repository.
+
 References:
 
     https://github.com/grigorig/stcgal/pull/71
