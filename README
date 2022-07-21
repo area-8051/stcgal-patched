@@ -61,6 +61,11 @@ all the MCUModel definitions on its standard output.
 MCUModel collection. One of them indicates if the MCU has a configurable
 EEPROM start address, convenienty replacing the old "IAP" MCU name list.
 
+- Because all tested MCU - STC12 to STC32G! - support dowloading at 
+115200 Baud, I changed default values of -l and -b to use this 
+transmission rate. When programming older MCU (e.g. STC90), you'll 
+have to add the following options to the command line: -l 2400 -b 19200
+
 I can be reached at: vincent -DOT- defert -AT- posteo -DOT- net.
 
 Note: I've rename the original README.md to README.md.stcgal so that 
