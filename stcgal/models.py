@@ -33,6 +33,7 @@ class MCUModelDatabase:
 
     models =(
     MCUModel(name='STC32G12K128-Beta', magic=0xf7e1, total=131072, code=131072, eeprom=0, iap=True, calibrate=True, mcs251=True),
+    MCUModel(name='STC32G12K128     ', magic=0xf7e3, total=131072, code=131072, eeprom=0, iap=True, calibrate=True, mcs251=True),
     MCUModel(name='STC-USB Link1', magic=0xf7ee, total=131072, code=131072, eeprom=0, iap=True, calibrate=True, mcs251=True),
     MCUModel(name='STC-USB Writer1', magic=0xf7ef, total=131072, code=131072, eeprom=0, iap=True, calibrate=True, mcs251=True),
     MCUModel(name='STC8H8K16U', magic=0xf781, total=65536, code=16384, eeprom=49152, iap=False, calibrate=True, mcs251=False),
@@ -60,11 +61,6 @@ class MCUModelDatabase:
     MCUModel(name='STC8H4K48TLR', magic=0xf7cd, total=65536, code=49152, eeprom=16384, iap=False, calibrate=True, mcs251=False),
     MCUModel(name='STC8H4K60TLR', magic=0xf7cb, total=65536, code=61440, eeprom=4096, iap=False, calibrate=True, mcs251=False),
     MCUModel(name='STC8H4K64TLR', magic=0xf7cc, total=65536, code=65024, eeprom=512, iap=True, calibrate=True, mcs251=False),
-    MCUModel(name='STC8H2K16T', magic=0xf7c1, total=65536, code=16384, eeprom=49152, iap=False, calibrate=True, mcs251=False),
-    MCUModel(name='STC8H2K32T', magic=0xf7c2, total=65536, code=32768, eeprom=32768, iap=False, calibrate=True, mcs251=False),
-    MCUModel(name='STC8H2K48T', magic=0xf7c5, total=65536, code=49152, eeprom=16384, iap=False, calibrate=True, mcs251=False),
-    MCUModel(name='STC8H2K60T', magic=0xf7c3, total=65536, code=61440, eeprom=4096, iap=False, calibrate=True, mcs251=False),
-    MCUModel(name='STC8H2K64T', magic=0xf7c4, total=65536, code=65024, eeprom=512, iap=True, calibrate=True, mcs251=False),
     MCUModel(name='STC8H3K16S4', magic=0xf741, total=65536, code=16384, eeprom=49152, iap=False, calibrate=True, mcs251=False),
     MCUModel(name='STC8H3K32S4', magic=0xf742, total=65536, code=32768, eeprom=32768, iap=False, calibrate=True, mcs251=False),
     MCUModel(name='STC8H3K48S4', magic=0xf745, total=65536, code=49152, eeprom=16384, iap=False, calibrate=True, mcs251=False),
@@ -87,6 +83,7 @@ class MCUModelDatabase:
     MCUModel(name='STC8H1K10', magic=0xf735, total=12288, code=10240, eeprom=2048, iap=False, calibrate=True, mcs251=False),
     MCUModel(name='STC8H1K12', magic=0xf736, total=12288, code=12288, eeprom=0, iap=True, calibrate=True, mcs251=False),
     MCUModel(name='STC8H1K17', magic=0xf737, total=17408, code=17408, eeprom=0, iap=True, calibrate=True, mcs251=False),
+    MCUModel(name='STC8H1K08T-Beta', magic=0xf840, total=12288, code=8192, eeprom=4096, iap=False, calibrate=True, mcs251=False),
     MCUModel(name='STC8G2K16S4', magic=0xf761, total=65536, code=16384, eeprom=49152, iap=False, calibrate=True, mcs251=False),
     MCUModel(name='STC8G2K32S4', magic=0xf762, total=65536, code=32768, eeprom=32768, iap=False, calibrate=True, mcs251=False),
     MCUModel(name='STC8G2K48S4', magic=0xf765, total=65536, code=49152, eeprom=16384, iap=False, calibrate=True, mcs251=False),
