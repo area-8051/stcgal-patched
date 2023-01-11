@@ -88,8 +88,11 @@ References:
 Linux users who have already installed stcgal can upgrade it by cloning 
 this repository and issuing the following commands as root:
 
-cp stcgal-patched/stcgal/*.py /usr/lib/python3.10/site-packages/stcgal/
-rm -rf /usr/lib/python3.10/site-packages/stcgal/__pycache__
+cp stcgal-patched/stcgal/*.py /usr/lib/python3.XX/site-packages/stcgal/
+rm -rf /usr/lib/python3.XX/site-packages/stcgal/__pycache__
+
+Note: replace XX in python3.XX with the minor version number given by
+python --version
 
 
 >>> Below is the comment in CreativeLau's pull request
