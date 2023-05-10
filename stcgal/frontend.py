@@ -34,6 +34,7 @@ from stcgal.protocols import Stc15AProtocol
 from stcgal.protocols import StcUsb15Protocol
 from stcgal.protocols import Stc8Protocol
 from stcgal.protocols import Stc8dProtocol
+from stcgal.protocols import Stc8gProtocol
 from stcgal.protocols import StcAutoProtocol
 from stcgal.protocols import StcProtocolException
 from stcgal.protocols import StcFramingException
@@ -59,17 +60,19 @@ class StcGal:
         elif opts.protocol == "stc12":
             self.protocol = Stc12Protocol(opts.port, opts.handshake, opts.baud)
         elif opts.protocol == "stc15a":
-            self.protocol = Stc15AProtocol(opts.port, opts.handshake, opts.baud,
-                                           round(opts.trim * 1000))
+            self.protocol = Stc15AProtocol(opts.port, opts.handshake, opts.baud, round(opts.trim * 1000))
         elif opts.protocol == "stc15":
-            self.protocol = Stc15Protocol(opts.port, opts.handshake, opts.baud,
-                                          round(opts.trim * 1000))
+            self.protocol = Stc15Protocol(opts.port, opts.handshake, opts.baud, round(opts.trim * 1000))
         elif opts.protocol == "stc8":
-            self.protocol = Stc8Protocol(opts.port, opts.handshake, opts.baud,
-                                         round(opts.trim * 1000))
+            self.protocol = Stc8Protocol(opts.port, opts.handshake, opts.baud, round(opts.trim * 1000))
         elif opts.protocol == "stc8d":
-            self.protocol = Stc8dProtocol(opts.port, opts.handshake, opts.baud,
-                                         round(opts.trim * 1000))
+            self.protocol = Stc8dProtocol(opts.port, opts.handshake, opts.baud, round(opts.trim * 1000))
+        elif opts.protocol == "stc8g":
+            """FIXME Ugly hack, but works until I fully implement the STC8G protocol"""
+            if opts.trim < 27360:
+                self.protocol = Stc8dProtocol(opts.port, opts.handshake, opts.baud, round(opts.trim * 1000))
+            else:
+                self.protocol = Stc8gProtocol(opts.port, opts.handshake, opts.baud, round(opts.trim * 1000))
         elif opts.protocol == "usb15":
             self.protocol = StcUsb15Protocol()
         else:
@@ -264,10 +267,10 @@ def cli():
                         choices=["dtr", "rts"], default="dtr")
     parser.add_argument("-r", "--resetcmd",  help="shell command for board power-cycling (instead of DTR assertion)", action="store")
     parser.add_argument("-P", "--protocol", help="protocol version (default: auto)",
-                        choices=["stc89", "stc12a", "stc12b", "stc12", "stc15a", "stc15", "stc8", "stc8d", "usb15", "auto"], default="auto")
+                        choices=["stc89", "stc12a", "stc12b", "stc12", "stc15a", "stc15", "stc8", "stc8d", "stc8g", "usb15", "auto"], default="auto")
     parser.add_argument("-p", "--port", help="serial port device", default="/dev/ttyUSB0")
     parser.add_argument("-b", "--baud", help="transfer baud rate (default: 19200)", type=BaudType(), default=115200)
-    parser.add_argument("-l", "--handshake", help="handshake baud rate (default: 2400)", type=BaudType(), default=115200)
+    parser.add_argument("-l", "--handshake", help="handshake baud rate (default: 2400)", type=BaudType(), default=2400)
     parser.add_argument("-o", "--option", help="set option (can be used multiple times, see documentation)", action="append")
     parser.add_argument("-t", "--trim", help="RC oscillator frequency in kHz (STC15+ series only)", type=float, default=0.0)
     parser.add_argument("-D", "--debug", help="enable debug output", action="store_true")
