@@ -275,7 +275,7 @@ class StcBaseProtocol(ABC):
             else:
                 self.ser.setDTR(True)
 				
-            time.sleep(0.5)
+            time.sleep(0.25)
             
             if resetpin == "rts":
                 self.ser.setRTS(False)
