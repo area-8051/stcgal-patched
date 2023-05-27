@@ -49,30 +49,25 @@ protocol, so it is NOT supported yet.
 
 While I was at it, I also made a few improvements:
 
-- a new command line option to use either DTR or RTS for automatic
-power cycling (allows for instance to use an 8-pin CH340N to build 
-an automatic programmer)
+- I added a new -A command line option to use either DTR or RTS for 
+automatic power cycling (allows for instance to use an 8-pin CH340N 
+to build an automatic programmer)
 
-- an update using the MCU list from stc-isp-v6.89G.exe, which includes 
-nice chips such as the STC16 and STC32
-
-- I replaced dump-mcu.py with a more reverse-engineering beginner-friendly
+- I replaced dump-mcu.py with a more reverse engineering beginner-friendly
 dump-mcu.c which handles everything for you. Just provide the path to 
 the executable of STC-ISP as command-line argument and it will spit out
 all the MCUModel definitions on its standard output.
+
+- Thanks to this utility, I update models.py every time STC releases
+a version of STC-ISP supporting new MCU.
 
 - I found the meaning of a few STC-ISP flags, so I added them to the
 MCUModel collection. One of them indicates if the MCU has a configurable
 EEPROM start address, convenienty replacing the old "IAP" MCU name list.
 
-- Because all tested MCU - STC12 to STC32G! - support dowloading at 
-115200 Baud, I changed default values of -l and -b to use this 
-transmission rate. When programming older MCU (e.g. STC90), you'll 
-have to add the following options to the command line: -l 2400 -b 19200
-
 I can be reached at: vincent -DOT- defert -AT- posteo -DOT- net.
 
-Note: I've rename the original README.md to README.md.stcgal so that 
+Note: I've renamed the original README.md to README.md.stcgal so that 
 github displays up-to-date information when accessing the repository.
 
 References:
